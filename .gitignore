@@ -1,5 +1,8 @@
 .vscode/
+.cache/
 .github/
+
+tmp/
 build/
 Camera/
 logs/
@@ -13,3 +16,5 @@ testvideos/
 watchdog.sh
 records_24/
 records_25/
+
+*.txt
