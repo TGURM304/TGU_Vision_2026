@@ -1,5 +1,7 @@
 #include "gimbal.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include "tools/crc.hpp"
 #include "tools/logger.hpp"
 #include "tools/math_tools.hpp"
@@ -14,6 +16,7 @@ Gimbal::Gimbal(const std::string & config_path)
 
   try {
     serial_.setPort(com_port);
+    serial_.setBaudrate(921600);
     serial_.open();
   } catch (const std::exception & e) {
     tools::logger()->error("[Gimbal] Failed to open serial: {}", e.what());
@@ -119,12 +122,22 @@ void Gimbal::send(
 
 bool Gimbal::read(uint8_t * buffer, size_t size)
 {
-  try {
-    return serial_.read(buffer, size) == size;
-  } catch (const std::exception & e) {
-    // tools::logger()->warn("[Gimbal] Failed to read serial: {}", e.what());
-    return false;
-  }
+    size_t total = 0;
+    auto start = std::chrono::steady_clock::now();
+    while (total < size) {
+        int sz = serial_.read(buffer + total, size - total);
+        if (sz <= 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 避免死循环
+        } else {
+            total += sz;
+        }
+
+        auto now = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count() > 100) {
+            return false; // 超时
+        }
+    }
+    return true;
 }
 
 void Gimbal::read_thread()
@@ -144,8 +157,10 @@ void Gimbal::read_thread()
       error_count++;
       continue;
     }
+    
+    // std::cout<< rx_data_.head[0] << ";" << rx_data_.head[1] << std::endl;
 
-    if (rx_data_.head[0] != 'S' || rx_data_.head[1] != 'P') continue;
+    if (rx_data_.head[0] != 'T' || rx_data_.head[1] != 'G') continue;
 
     auto t = std::chrono::steady_clock::now();
 
