@@ -3,7 +3,6 @@
 #include <thread>
 
 #include "io/camera.hpp"
-#include "io/dm_imu/dm_imu.hpp"
 #include "tasks/auto_aim/aimer.hpp"
 #include "tasks/auto_aim/multithread/commandgener.hpp"
 #include "tasks/auto_aim/multithread/mt_detector.hpp"
@@ -24,7 +23,7 @@
 
 const std::string keys =
   "{help h usage ? | | 输出命令行参数说明}"
-  "{@config-path   | | yaml配置文件路径 }";
+  "{@config-path   | ./configs/standard.yaml | yaml配置文件路径 }";
 
 using namespace std::chrono_literals;
 
@@ -98,7 +97,7 @@ int main(int argc, char * argv[])
     camera.read(img, t);
     auto q = gimbal.q(t);
     auto gs = gimbal.state();
-    recorder.record(img, q, t);
+    // recorder.record(img, q, t);
     solver.set_R_gimbal2world(q);
 
     /// 自瞄
