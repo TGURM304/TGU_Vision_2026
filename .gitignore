@@ -1,4 +1,5 @@
 .vscode/
+.idea/
 .cache/
 .github/
 
@@ -18,3 +19,4 @@ records_24/
 records_25/
 
 *.txt
+*.log
