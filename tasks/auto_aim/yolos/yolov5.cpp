@@ -242,6 +242,7 @@ void YOLOV5::draw_detections(
   }
   cv::resize(detection, detection, {}, 0.5, 0.5);  // 显示时缩小图片尺寸
   cv::imshow("detection", detection);
+  cv::waitKey(1);
 }
 
 void YOLOV5::save(const Armor & armor) const
