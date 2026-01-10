@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
     auto dt = tools::delta_time(now, last);
     tools::logger()->info("{:.2f} fps", 1 / dt);
 
-    auto key = cv::waitKey(33);
+    auto key = cv::waitKey(1);
     if (key == 'q') break;
   }
 
