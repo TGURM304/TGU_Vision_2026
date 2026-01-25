@@ -16,7 +16,7 @@ Gimbal::Gimbal(const std::string & config_path)
 
   try {
     serial_.setPort(com_port);
-    serial_.setBaudrate(921600);
+    serial_.setBaudrate(115200);
     serial_.open();
   } catch (const std::exception & e) {
     tools::logger()->error("[Gimbal] Failed to open serial: {}", e.what());
