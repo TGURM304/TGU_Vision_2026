@@ -13,10 +13,11 @@ Gimbal::Gimbal(const std::string & config_path)
 {
   auto yaml = tools::load(config_path);
   auto com_port = tools::read<std::string>(yaml, "com_port");
+  auto com_baudrate = tools::read<long long>(yaml, "com_baudrate");
 
   try {
     serial_.setPort(com_port);
-    serial_.setBaudrate(115200);
+    serial_.setBaudrate(com_baudrate);
     serial_.open();
   } catch (const std::exception & e) {
     tools::logger()->error("[Gimbal] Failed to open serial: {}", e.what());
