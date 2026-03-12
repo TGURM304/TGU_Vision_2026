@@ -37,8 +37,8 @@ max_temp_lost_count: 15
 outpost_max_temp_lost_count: 75
 
 #####-----aimer参数-----#####
-yaw_offset: 2 # degree -2.5
-pitch_offset: 6.5 # degree 2
+yaw_offset: 0
+pitch_offset: 0
 comming_angle: 55 # degree
 leaving_angle: 20 # degree
 decision_speed: 7 # rad/s
@@ -59,15 +59,17 @@ vid_pid: "2bdf:0001"
 #  1  0  0
 #  0  1  0
 #  0  0  1
-R_gimbal2imubody: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+R_gimbal2imubody: [1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
 
 # 重投影误差: 0.1956px
 camera_matrix: [1705.0653433037448, 0, 720.40344524046429, 0, 1700.6460675615697, 549.20914331420488, 0, 0, 1]
 distort_coeffs: [-0.062465172400315981, 0.10305943039166041, 0.0038821849203493552, 6.5657701141001959e-05, 0]
 
-# 旧步兵参数
-R_camera2gimbal: [-0.052336, 0., 0.99863, -0.99863, 0., -0.052336, 0., -1., 0.]
-t_camera2gimbal: [0, 0, -0.3]
+# 轮腿步兵参数
+R_camera2gimbal: [0, 0, 1, -1, 0, 0, 0, -1, 0]
+t_camera2gimbal: [0, 0, 0.05]
 
 #####-----cboard参数-----#####
 quaternion_canid: 0x100
@@ -77,7 +79,7 @@ can_interface: "can0"
 
 #####-----gimbal参数-----#####
 com_port: "/dev/ttyACM0"
-com_baudrate: 115200
+com_baudrate: 921600
 yaw_kp: 0
 yaw_kd: 0
 pitch_kp: 0
