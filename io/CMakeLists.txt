@@ -51,9 +51,9 @@ else()
     message(STATUS "ROS2 environment found, compiling ROS2-related code.")
     
     # 添加 ROS2 相关的文件
-    target_sources(io PRIVATE ros2/publish2nav.cpp ros2/ros2.cpp ros2/subscribe2nav.cpp)
+    target_sources(io PRIVATE ros2/ros2.cpp ros2/subscribe2nav.cpp)
 
     # 设置 ROS2 依赖
     include_directories(${std_msgs_INCLUDE_DIRS})
-    ament_target_dependencies(io rclcpp std_msgs sp_msgs)
+    ament_target_dependencies(io rclcpp std_msgs)
 endif()

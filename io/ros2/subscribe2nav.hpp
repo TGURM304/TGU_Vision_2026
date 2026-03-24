@@ -1,4 +1,3 @@
-```cpp
 #ifndef IO__SUBSCRIBE2NAV_HPP
 #define IO__SUBSCRIBE2NAV_HPP
 
@@ -36,4 +35,3 @@ private:
 }  // namespace io
 
 #endif  // IO__SUBSCRIBE2NAV_HPP
-```

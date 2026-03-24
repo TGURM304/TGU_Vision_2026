@@ -1,4 +1,3 @@
-```cpp
 #ifndef IO__ROS2_HPP
 #define IO__ROS2_HPP
 
@@ -29,4 +28,3 @@ private:
 }  // namespace io
 
 #endif
-```

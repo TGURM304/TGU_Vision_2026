@@ -1,8 +1,12 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <thread>
+#include <optional>
 
 #include "io/camera.hpp"
+#include "io/gimbal/gimbal_nav.hpp"
+#include "io/ros2/ros2.hpp"
+#include "tasks/auto_aim/planner/planner.hpp"
 #include "tasks/auto_aim/aimer.hpp"
 #include "tasks/auto_aim/multithread/commandgener.hpp"
 #include "tasks/auto_aim/multithread/mt_detector.hpp"
@@ -18,7 +22,7 @@
 
 const std::string keys =
   "{help h usage ? | | 输出命令行参数说明}"
-  "{@config-path   | ./configs/standard.yaml | yaml配置文件路径 }";
+  "{@config-path   | ./configs/stentry.yaml | yaml配置文件路径 }";
 
 using namespace std::chrono_literals;
 
@@ -45,12 +49,6 @@ int main(int argc, char * argv[])
 
   tools::ThreadSafeQueue<std::optional<auto_aim::Target>, true> target_queue(1);
   target_queue.push(std::nullopt);
-
-  auto_buff::Buff_Detector buff_detector(config_path);
-  auto_buff::Solver buff_solver(config_path);
-  auto_buff::SmallTarget buff_small_target;
-  auto_buff::BigTarget buff_big_target;
-  auto_buff::Aimer buff_aimer(config_path);
 
   cv::Mat img;
   Eigen::Quaterniond q;
