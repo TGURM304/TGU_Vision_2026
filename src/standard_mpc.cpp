@@ -1,5 +1,6 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
+#include <optional>
 #include <thread>
 
 #include "io/camera.hpp"
@@ -71,6 +72,10 @@ int main(int argc, char *argv[]) {
 
     while (!quit) {
       if (!target_queue.empty() && mode == io::GimbalMode::AUTO_AIM) {
+        auto color = gimbal.color();
+        if (color != std::nullopt)
+          tracker.set_color(color.value());
+
         auto target = target_queue.front();
         auto gs = gimbal.state();
         auto plan = planner.plan(target, gs.bullet_speed);
