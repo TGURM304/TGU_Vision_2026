@@ -154,4 +154,11 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
 
     install(TARGETS standard_mpc
             RUNTIME DESTINATION bin)
+
+    # 安装 systemd service
+    configure_file(run/auto-aim.service.in
+                ${CMAKE_CURRENT_BINARY_DIR}/auto-aim.service
+                @ONLY)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/auto-aim.service
+            DESTINATION /etc/systemd/system)
 endif()
