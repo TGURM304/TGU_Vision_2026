@@ -252,7 +252,9 @@ void YOLO11::draw_detections(
     cv::rectangle(detection, roi_, green, 2);
   }
   cv::resize(detection, detection, {}, 0.5, 0.5);  // 显示时缩小图片尺寸
+  #ifndef NDEBUG
   cv::imshow("detection", detection);
+  #endif
 }
 
 void YOLO11::save(const Armor & armor) const
