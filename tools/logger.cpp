@@ -34,7 +34,11 @@ void set_logger(spdlog::level::level_enum level) {
 
 std::shared_ptr<spdlog::logger> logger() {
   if (!logger_)
+#ifndef NDEBUG
     set_logger(spdlog::level::debug);
+#else
+    set_logger(spdlog::level::info);
+#endif
   return logger_;
 }
 
