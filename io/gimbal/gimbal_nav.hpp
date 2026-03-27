@@ -17,7 +17,7 @@ namespace io
 struct __attribute__((packed)) GimbalToVision
 {
   uint8_t head[2] = {'T', 'G'};
-  uint8_t mode = 0;  // 0: 空闲, 1: 自瞄, 2: 小符, 3: 大符
+  uint8_t mode = 1;  // 0: 空闲, 1: 自瞄, 2: 小符, 3: 大符
   float q[4] = {0,0,0,0};    // wxyz顺序
   float yaw = 0;
   float yaw_vel = 0;
@@ -25,8 +25,8 @@ struct __attribute__((packed)) GimbalToVision
   float pitch_vel = 0;
   float bullet_speed = 0;
   // uint16_t bullet_count = 0;
-  int8_t is_start = 0;
-  int8_t hp = 0;
+  uint8_t is_start = 0;
+  uint16_t hp = 0;
   uint16_t crc16;
 };
 
@@ -68,21 +68,21 @@ struct GimbalState
   uint16_t bullet_count;
 };
 
-class Gimbal
+class GimbalNav
 {
 public:
-  Gimbal(const std::string & config_path);
+  GimbalNav(const std::string & config_path);
 
-  ~Gimbal();
+  ~GimbalNav();
 
   GimbalMode mode() const;
   GimbalState state() const;
   std::string str(GimbalMode mode) const;
   Eigen::Quaterniond q(std::chrono::steady_clock::time_point t);
 
-  void send(
-    bool control, bool fire, float yaw, float yaw_vel, float yaw_acc, float pitch, float pitch_vel,
-    float pitch_acc);
+  // void send(
+  //   bool control, bool fire, float yaw, float yaw_vel, float yaw_acc, float pitch, float pitch_vel,
+  //   float pitch_acc);
 
   void send(io::VisionToGimbal VisionToGimbal);
 

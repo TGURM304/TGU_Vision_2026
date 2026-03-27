@@ -245,8 +245,8 @@ void YOLOV5::draw_detections(
              cv::Scalar(0, 0, 255), 2);
   #ifndef NDEBUG
   cv::imshow("detection", detection);
-  #endif
   cv::waitKey(1);
+  #endif
 }
 
 void YOLOV5::save(const Armor & armor) const
