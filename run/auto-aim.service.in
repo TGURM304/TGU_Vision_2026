@@ -1,0 +1,19 @@
+[Unit]
+Description=Run auto aim
+After=local-fs.target
+
+[Service]
+Type=simple
+WorkingDirectory=@CMAKE_INSTALL_PREFIX@
+ExecStart=/bin/bash bin/run.sh bin/@AUTO_AIM_BINARY_NAME@ --config-path configs/@AUTO_AIM_CONF_NAME@
+
+# 日志输出到 journal
+StandardOutput=journal
+StandardError=journal
+
+# 异常退出自动重启
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

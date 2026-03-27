@@ -243,7 +243,9 @@ void YOLOV5::draw_detections(
   cv::resize(detection, detection, {}, 0.5, 0.5);  // 显示时缩小图片尺寸
   cv::circle(detection, cv::Point(detection.cols/2, detection.rows/2), 5,
              cv::Scalar(0, 0, 255), 2);
+  #ifndef NDEBUG
   cv::imshow("detection", detection);
+  #endif
   cv::waitKey(1);
 }
 
