@@ -5,6 +5,13 @@ export MVCAM_SDK_VERSION="@HIKROBOTIC_SDK_VERSION@"
 export MVCAM_COMMON_RUNENV="$MVCAM_SDK_PATH/lib"
 export MVCAM_GENICAM_CLPROTOCOL="$MVCAM_SDK_PATH/lib/CLProtocol"
 export ALLUSERSPROFILE"=$MVCAM_SDK_PATH/MVFG"
+
+if [ "@ROBOT_TYPE@" = "sentry" ]
+then
+    source @ROS_INSTALL_PREFIX@/setup.bash
+    source @SENTRY_INSTALL_PREFIX@/setup.bash
+fi
+
 export LD_LIBRARY_PATH="$MVCAM_SDK_PATH/lib/64:$LD_LIBRARY_PATH"
 
 exec "$@"

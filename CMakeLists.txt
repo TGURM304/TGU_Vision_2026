@@ -128,7 +128,7 @@ find_package(rosidl_typesupport_cpp QUIET)
 if(ament_cmake_FOUND AND rclcpp_FOUND AND std_msgs_FOUND AND rosidl_typesupport_cpp_FOUND)
     # 编译 sentry
     add_executable(sentry_mpc src/sentry_mpc.cpp)
-    target_link_libraries(sentry ${OpenCV_LIBS} fmt::fmt yaml-cpp auto_aim omniperception tools io)
+    target_link_libraries(sentry_mpc ${OpenCV_LIBS} fmt::fmt yaml-cpp auto_aim omniperception tools io)
     set(BUILD_SENTRY ON)
 else()
     message(STATUS "ROS2 environment not found, skipping ROS2-related code.")

@@ -29,7 +29,9 @@
       "cacheVariables": {
         "ROBOT_TYPE": "sentry",
         "AUTO_AIM_BINARY_NAME": "sentry_mpc",
-        "AUTO_AIM_CONF_NAME": "sentry.yaml"
+        "AUTO_AIM_CONF_NAME": "sentry.yaml",
+        "ROS_INSTALL_PREFIX": "/opt/ros/humble",
+        "SENTRY_INSTALL_PREFIX": "/home/tgu/Desktop/tgu_sentry_2026_ws/install"
       }
     },
     {
