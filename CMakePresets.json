@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug for all robot targets",
+      "binaryDir": "${sourceDir}/build/Debug",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "True"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/Release",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "True",
+        "CMAKE_INSTALL_PREFIX": "/opt/vision"
+      }
+    },
+    {
+      "name": "sentry",
+      "inherits": "release",
+      "displayName": "Auto aim for sentry (Release)",
+      "cacheVariables": {
+        "ROBOT_TYPE": "sentry",
+        "AUTO_AIM_BINARY_NAME": "sentry_mpc",
+        "AUTO_AIM_CONF_NAME": "sentry.yaml"
+      }
+    },
+    {
+      "name": "infantry",
+      "inherits": "release",
+      "displayName": "Auto aim for infantry (Release)",
+      "cacheVariables": {
+        "ROBOT_TYPE": "infantry",
+        "AUTO_AIM_BINARY_NAME": "standard_mpc",
+        "AUTO_AIM_CONF_NAME": "standard.yaml"
+      }
+    }
+  ]
+}

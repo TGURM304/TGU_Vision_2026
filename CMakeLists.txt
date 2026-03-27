@@ -128,12 +128,23 @@ if(ament_cmake_FOUND AND rclcpp_FOUND AND std_msgs_FOUND AND rosidl_typesupport_
     # 编译 sentry
     add_executable(sentry_mpc src/sentry_mpc.cpp)
     target_link_libraries(sentry ${OpenCV_LIBS} fmt::fmt yaml-cpp auto_aim omniperception tools io)
+    set(BUILD_SENTRY ON)
 else()
     message(STATUS "ROS2 environment not found, skipping ROS2-related code.")
 endif()
 
 
 if(CMAKE_BUILD_TYPE STREQUAL Release)
+    if(NOT BUILD_SENTRY AND ROBOT_TYPE STREQUAL sentry)
+        message(FATAL_ERROR "ROS2 environment not found, unable to build for sentry")
+    endif()
+    
+    if(NOT AUTO_AIM_CONF_NAME OR NOT AUTO_AIM_BINARY_NAME)
+        message(FATAL_ERROR "'AUTO_AIM_CONF_NAME' and 'AUTO_AIM_BINARY_NAME' must be specified")
+    else()
+        message(STATUS "Executable file is '${AUTO_AIM_BINARY_NAME}', configuration file is '${AUTO_AIM_CONF_NAME}'")
+    endif()
+    
     # get_filename_component(MV_CAM_SDK_REAL
     #     "${HIKROBOTIC_SDK_INSTALL_PREFIX}/lib/64/libMvCameraControl.so"
     #     REALPATH)
@@ -141,8 +152,8 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
     #         DESTINATION lib
     #         RENAME libMvCameraControl.so)
     configure_file(run/run.sh.in
-                ${CMAKE_CURRENT_BINARY_DIR}/run.sh
-                @ONLY)
+                   ${CMAKE_CURRENT_BINARY_DIR}/run.sh
+                   @ONLY)
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/run.sh
             DESTINATION bin)
 
@@ -152,13 +163,15 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
     install(DIRECTORY assets configs
             DESTINATION .)
 
-    install(TARGETS standard_mpc
+    install(TARGETS ${AUTO_AIM_BINARY_NAME}
             RUNTIME DESTINATION bin)
 
     # 安装 systemd service
     configure_file(run/auto-aim.service.in
-                ${CMAKE_CURRENT_BINARY_DIR}/auto-aim.service
-                @ONLY)
+                   ${CMAKE_CURRENT_BINARY_DIR}/auto-aim.service
+                   @ONLY)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/auto-aim.service
             DESTINATION /etc/systemd/system)
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/auto-aim.service
+    #         DESTINATION /tmp)
 endif()

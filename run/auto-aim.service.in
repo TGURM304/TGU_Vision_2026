@@ -5,7 +5,7 @@ After=local-fs.target
 [Service]
 Type=simple
 WorkingDirectory=@CMAKE_INSTALL_PREFIX@
-ExecStart=/bin/bash bin/run.sh bin/standard_mpc --config-path configs/standard.yaml
+ExecStart=/bin/bash bin/run.sh bin/@AUTO_AIM_BINARY_NAME@ --config-path configs/@AUTO_AIM_CONF_NAME@
 
 # 日志输出到 journal
 StandardOutput=journal
