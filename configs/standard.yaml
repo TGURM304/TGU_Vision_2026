@@ -9,14 +9,14 @@ yolov8_model_path: assets/yolov8.xml
 yolov5_model_path: assets/yolov5.xml
 device: GPU
 min_confidence: 0.8
-use_traditional: true
+use_traditional: false
 
 #####-----ROI-----#####
 roi: 
-  x: 420
-  y: 50
-  width: 600
-  height: 600
+  x: 250
+  y: 400
+  width: 900
+  height: 500
 
 use_roi: false
 
@@ -38,12 +38,12 @@ outpost_max_temp_lost_count: 75
 
 #####-----aimer参数-----#####
 yaw_offset: 0
-pitch_offset: 0
+pitch_offset: 4
 comming_angle: 55 # degree
 leaving_angle: 20 # degree
 decision_speed: 7 # rad/s
 high_speed_delay_time: 0.0 # s
-low_speed_delay_time: 0.0 # s planner use this value
+low_speed_delay_time: 0.08 # s planner use this value
 
 #####-----shooter参数-----#####
 first_tolerance: 3 # 近距离射击容差，degree
@@ -69,7 +69,7 @@ distort_coeffs: [-0.062465172400315981, 0.10305943039166041, 0.00388218492034935
 
 # 轮腿步兵参数
 R_camera2gimbal: [0, 0, 1, -1, 0, 0, 0, -1, 0]
-t_camera2gimbal: [0, 0, 0.05]
+t_camera2gimbal: [0, 0, 0.065]
 
 #####-----cboard参数-----#####
 quaternion_canid: 0x100
