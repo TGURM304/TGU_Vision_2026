@@ -9,7 +9,7 @@
 
 namespace io
 {
-Gimbal::Gimbal(const std::string & config_path)
+GimbalNav::GimbalNav(const std::string & config_path)
 {
   auto yaml = tools::load(config_path);
   auto com_port = tools::read<std::string>(yaml, "com_port");
@@ -24,32 +24,32 @@ Gimbal::Gimbal(const std::string & config_path)
     exit(1);
   }
 
-  thread_ = std::thread(&Gimbal::read_thread, this);
+  thread_ = std::thread(&GimbalNav::read_thread, this);
 
   queue_.pop();
   tools::logger()->info("[Gimbal] First q received.");
 }
 
-Gimbal::~Gimbal()
+GimbalNav::~GimbalNav()
 {
   quit_ = true;
   if (thread_.joinable()) thread_.join();
   serial_.close();
 }
 
-GimbalMode Gimbal::mode() const
+GimbalMode GimbalNav::mode() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   return mode_;
 }
 
-GimbalState Gimbal::state() const
+GimbalState GimbalNav::state() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   return state_;
 }
 
-std::string Gimbal::str(GimbalMode mode) const
+std::string GimbalNav::str(GimbalMode mode) const
 {
   switch (mode) {
     case GimbalMode::IDLE:
@@ -65,7 +65,7 @@ std::string Gimbal::str(GimbalMode mode) const
   }
 }
 
-Eigen::Quaterniond Gimbal::q(std::chrono::steady_clock::time_point t)
+Eigen::Quaterniond GimbalNav::q(std::chrono::steady_clock::time_point t)
 {
   while (true) {
     auto [q_a, t_a] = queue_.pop();
@@ -81,15 +81,15 @@ Eigen::Quaterniond Gimbal::q(std::chrono::steady_clock::time_point t)
   }
 }
 
-void Gimbal::send(io::VisionToGimbal VisionToGimbal)
+void GimbalNav::send(io::VisionToGimbal vison2gimbal)
 {
-  tx_data_.mode = VisionToGimbal.mode;
-  tx_data_.yaw = VisionToGimbal.yaw;
-  tx_data_.yaw_vel = VisionToGimbal.yaw_vel;
-  tx_data_.yaw_acc = VisionToGimbal.yaw_acc;
-  tx_data_.pitch = VisionToGimbal.pitch;
-  tx_data_.pitch_vel = VisionToGimbal.pitch_vel;
-  tx_data_.pitch_acc = VisionToGimbal.pitch_acc;
+  tx_data_.mode = vison2gimbal.mode;
+  tx_data_.yaw = vison2gimbal.yaw;
+  tx_data_.yaw_vel = vison2gimbal.yaw_vel;
+  tx_data_.yaw_acc = vison2gimbal.yaw_acc;
+  tx_data_.pitch = vison2gimbal.pitch;
+  tx_data_.pitch_vel = vison2gimbal.pitch_vel;
+  tx_data_.pitch_acc = vison2gimbal.pitch_acc;
   tx_data_.crc16 = tools::get_crc16(
     reinterpret_cast<uint8_t *>(&tx_data_), sizeof(tx_data_) - sizeof(tx_data_.crc16));
 
@@ -100,44 +100,7 @@ void Gimbal::send(io::VisionToGimbal VisionToGimbal)
   }
 }
 
-// struct __attribute__((packed)) VisionToGimbal
-// {
-//   uint8_t head[2] = {'T', 'G'};
-//   uint8_t mode;  // 0: 不控制, 1: 控制云台但不开火，2: 控制云台且开火
-//   float yaw;
-//   float yaw_vel;
-//   float yaw_acc;
-//   float pitch;
-//   float pitch_vel;
-//   float pitch_acc;
-//   float nav_x;
-//   float nav_y;
-//   float nav_z;
-//   uint16_t crc16;
-// };
-
-void Gimbal::send(
-  bool control, bool fire, float yaw, float yaw_vel, float yaw_acc, float pitch, float pitch_vel,
-  float pitch_acc)
-{
-  tx_data_.mode = control ? (fire ? 2 : 1) : 0;
-  tx_data_.yaw = yaw;
-  tx_data_.yaw_vel = yaw_vel;
-  tx_data_.yaw_acc = yaw_acc;
-  tx_data_.pitch = pitch;
-  tx_data_.pitch_vel = pitch_vel;
-  tx_data_.pitch_acc = pitch_acc;
-  tx_data_.crc16 = tools::get_crc16(
-    reinterpret_cast<uint8_t *>(&tx_data_), sizeof(tx_data_) - sizeof(tx_data_.crc16));
-
-  try {
-    serial_.write(reinterpret_cast<uint8_t *>(&tx_data_), sizeof(tx_data_));
-  } catch (const std::exception & e) {
-    tools::logger()->warn("[Gimbal] Failed to write serial: {}", e.what());
-  }
-}
-
-bool Gimbal::read(uint8_t * buffer, size_t size)
+bool GimbalNav::read(uint8_t * buffer, size_t size)
 {
     size_t total = 0;
     auto start = std::chrono::steady_clock::now();
@@ -157,7 +120,7 @@ bool Gimbal::read(uint8_t * buffer, size_t size)
     return true;
 }
 
-void Gimbal::read_thread()
+void GimbalNav::read_thread()
 {
   tools::logger()->info("[Gimbal] read_thread started.");
   int error_count = 0;
@@ -204,7 +167,7 @@ void Gimbal::read_thread()
     state_.pitch = rx_data_.pitch;
     state_.pitch_vel = rx_data_.pitch_vel;
     state_.bullet_speed = rx_data_.bullet_speed;
-    state_.bullet_count = rx_data_.bullet_count;
+    // state_.bullet_count = rx_data_.bullet_count;
 
     switch (rx_data_.mode) {
       case 0:
@@ -229,7 +192,7 @@ void Gimbal::read_thread()
   tools::logger()->info("[Gimbal] read_thread stopped.");
 }
 
-void Gimbal::reconnect()
+void GimbalNav::reconnect()
 {
   int max_retry_count = 10;
   for (int i = 0; i < max_retry_count && !quit_; ++i) {
