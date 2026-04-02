@@ -2,6 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include "tools/debug.hpp"
 #include "tools/crc.hpp"
 #include "tools/logger.hpp"
 #include "tools/math_tools.hpp"
@@ -167,26 +168,16 @@ void GimbalNav::read_thread()
     state_.pitch = rx_data_.pitch;
     state_.pitch_vel = rx_data_.pitch_vel;
     state_.bullet_speed = rx_data_.bullet_speed;
+    state_.is_start = rx_data_.is_start;
+    state_.hp = rx_data_.hp;
     // state_.bullet_count = rx_data_.bullet_count;
-
-    switch (rx_data_.mode) {
-      case 0:
-        mode_ = GimbalMode::IDLE;
-        break;
-      case 1:
-        mode_ = GimbalMode::AUTO_AIM;
-        break;
-      case 2:
-        mode_ = GimbalMode::SMALL_BUFF;
-        break;
-      case 3:
-        mode_ = GimbalMode::BIG_BUFF;
-        break;
-      default:
-        mode_ = GimbalMode::IDLE;
-        tools::logger()->warn("[Gimbal] Invalid mode: {}", rx_data_.mode);
-        break;
-    }
+  
+    mode_ = GimbalMode::AUTO_AIM;
+    
+    // DEBUG("[Gimbal] HP: {} ; is_start: {}; bullet_speed: {}",
+    //   (uint16_t)rx_data_.hp,
+    //   (uint8_t)rx_data_.is_start,
+    //   (float)rx_data_.bullet_speed);
   }
 
   tools::logger()->info("[Gimbal] read_thread stopped.");

@@ -44,6 +44,9 @@ find_package(rclcpp QUIET)
 find_package(std_msgs QUIET)
 find_package(geometry_msgs QUIET)
 find_package(rosidl_typesupport_cpp QUIET)
+find_package(nav2_msgs REQUIRED)
+find_package(rclcpp_action QUIET)
+find_package(tf2 REQUIRED)
 
 # 如果找不到 ROS 环境，则跳过 ROS 相关的部分
 if(NOT ament_cmake_FOUND OR NOT rclcpp_FOUND OR NOT std_msgs_FOUND OR NOT rosidl_typesupport_cpp_FOUND)
@@ -52,10 +55,13 @@ else()
     message(STATUS "ROS2 environment found, compiling ROS2-related code.")
     
     # 添加 ROS2 相关的文件
-    target_sources(io PRIVATE ros2/ros2.cpp ros2/subscribe2nav.cpp)
+    target_sources(io PRIVATE ros2/ros2.cpp ros2/subscribe2nav.cpp ros2/action2nav.cpp)
 
     # 设置 ROS2 依赖
     include_directories(${std_msgs_INCLUDE_DIRS})
     include_directories(${geometry_msgs_INCLUDE_DIRS})
-    ament_target_dependencies(io rclcpp std_msgs geometry_msgs)
+    include_directories(${rclcpp_action_INCLUDE_DIRS})
+    include_directories(${nav2_msgs_INCLUDE_DIRS})
+    include_directories(${tf2_INCLUDE_DIRS})
+    ament_target_dependencies(io rclcpp std_msgs geometry_msgs rclcpp_action nav2_msgs tf2)
 endif()

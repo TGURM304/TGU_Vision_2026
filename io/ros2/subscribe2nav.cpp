@@ -37,7 +37,7 @@ void Subscribe2Nav::cmd_vel_callback(const geometry_msgs::msg::Twist::SharedPtr 
 void Subscribe2Nav::start()
 {
   RCLCPP_INFO(this->get_logger(), "nav_subscriber node starting...");
-  rclcpp::spin(this->shared_from_this());
+  rclcpp::spin(this->get_node_base_interface());
 }
 
 std::tuple<double, double, double> Subscribe2Nav::get_nav_cmd()

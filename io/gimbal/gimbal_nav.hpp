@@ -4,6 +4,7 @@
 #include <Eigen/Geometry>
 #include <atomic>
 #include <chrono>
+#include <cstdint>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -35,16 +36,17 @@ static_assert(sizeof(GimbalToVision) <= 64);
 struct __attribute__((packed)) VisionToGimbal
 {
   uint8_t head[2] = {'T', 'G'};
-  uint8_t mode;  // 0: 不控制, 1: 控制云台但不开火，2: 控制云台且开火
+  uint8_t mode = 0;  // 0: 不控制, 1: 控制云台但不开火，2: 控制云台且开火
   float yaw;
   float yaw_vel;
   float yaw_acc;
   float pitch;
   float pitch_vel;
   float pitch_acc;
-  float nav_x;
-  float nav_y;
-  float nav_z;
+  float nav_x = 0;
+  float nav_y = 0;
+  float nav_z = 0;
+  uint8_t status = 1;
   uint16_t crc16;
 };
 
@@ -65,7 +67,8 @@ struct GimbalState
   float pitch;
   float pitch_vel;
   float bullet_speed;
-  uint16_t bullet_count;
+  uint8_t is_start = 0;
+  uint16_t hp = 0;
 };
 
 class GimbalNav
@@ -96,7 +99,7 @@ private:
   GimbalToVision rx_data_;
   VisionToGimbal tx_data_;
 
-  GimbalMode mode_ = GimbalMode::IDLE;
+  GimbalMode mode_ = GimbalMode::AUTO_AIM;
   GimbalState state_;
   tools::ThreadSafeQueue<std::tuple<Eigen::Quaterniond, std::chrono::steady_clock::time_point>>
     queue_{1000};
