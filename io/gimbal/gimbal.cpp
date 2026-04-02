@@ -9,6 +9,8 @@
 #include "tools/math_tools.hpp"
 #include "tools/yaml.hpp"
 
+#include "tools/debug.hpp"
+
 namespace io {
 Gimbal::Gimbal(const std::string &config_path) {
   auto yaml = tools::load(config_path);
@@ -187,6 +189,11 @@ void Gimbal::read_thread() {
     state_.pitch_vel = rx_data_.pitch_vel;
     state_.bullet_speed = rx_data_.bullet_speed;
     state_.bullet_count = rx_data_.bullet_count;
+
+    // DEBUG("recv: pitch:{:.3f}; yaw:{:.3f}", rx_data_.pitch * RAD,
+    // rx_data_.yaw * RAD);
+    state_.vs[0] = rx_data_.vs[0];
+    state_.vs[1] = rx_data_.vs[1];
 
     // 颜色逻辑
     switch (rx_data_.color) {

@@ -1,5 +1,5 @@
-enemy_color: "red"
-# enemy_color: "blue"
+# enemy_color: "red"
+enemy_color: "blue"
 
 #####-----神经网络参数-----#####
 yolo_name: yolov5
@@ -37,13 +37,13 @@ max_temp_lost_count: 15
 outpost_max_temp_lost_count: 75
 
 #####-----aimer参数-----#####
-yaw_offset: 0
-pitch_offset: 4
+yaw_offset: -1.5
+pitch_offset: 3
 comming_angle: 55 # degree
 leaving_angle: 20 # degree
 decision_speed: 7 # rad/s
 high_speed_delay_time: 0.0 # s
-low_speed_delay_time: 0.08 # s planner use this value
+low_speed_delay_time: 0.050 # s planner use this value
 
 #####-----shooter参数-----#####
 first_tolerance: 3 # 近距离射击容差，degree
@@ -52,7 +52,7 @@ judge_distance: 2 #距离判断阈值
 auto_fire: true # 是否由自瞄控制射击
 
 camera_name: "hikrobot"
-exposure_ms: 2.5
+exposure_ms: 4
 gain: 16.9
 vid_pid: "2bdf:0001"
 
@@ -69,7 +69,7 @@ distort_coeffs: [-0.062465172400315981, 0.10305943039166041, 0.00388218492034935
 
 # 轮腿步兵参数
 R_camera2gimbal: [0, 0, 1, -1, 0, 0, 0, -1, 0]
-t_camera2gimbal: [0, 0, 0.065]
+t_camera2gimbal: [0, 0, -0.05]
 
 #####-----cboard参数-----#####
 quaternion_canid: 0x100
