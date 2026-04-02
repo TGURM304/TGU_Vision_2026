@@ -27,6 +27,7 @@ struct __attribute__((packed)) GimbalToVision {
   float pitch_vel = 0;
   float bullet_speed = 0;
   uint16_t bullet_count = 0; // 子弹累计发送次数
+  float vs[2] = {0, 0};
   uint16_t crc16;
 };
 
@@ -60,6 +61,8 @@ struct GimbalState {
   float pitch_vel;
   float bullet_speed;
   uint16_t bullet_count;
+  
+  float vs[2];
 };
 
 class Gimbal {
