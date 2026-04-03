@@ -43,9 +43,9 @@ struct __attribute__((packed)) VisionToGimbal
   float pitch;
   float pitch_vel;
   float pitch_acc;
-  float nav_x = 0;
-  float nav_y = 0;
-  float nav_z = 0;
+  float nav_x;
+  float nav_y;
+  float nav_z;
   uint8_t status = 1;
   uint16_t crc16;
 };

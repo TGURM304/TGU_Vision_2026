@@ -91,6 +91,9 @@ void GimbalNav::send(io::VisionToGimbal vison2gimbal)
   tx_data_.pitch = vison2gimbal.pitch;
   tx_data_.pitch_vel = vison2gimbal.pitch_vel;
   tx_data_.pitch_acc = vison2gimbal.pitch_acc;
+  tx_data_.nav_x = vison2gimbal.nav_x;
+  tx_data_.nav_y = vison2gimbal.nav_y;
+  tx_data_.nav_z = vison2gimbal.nav_z;
   tx_data_.crc16 = tools::get_crc16(
     reinterpret_cast<uint8_t *>(&tx_data_), sizeof(tx_data_) - sizeof(tx_data_.crc16));
 

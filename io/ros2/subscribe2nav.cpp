@@ -10,7 +10,7 @@ Subscribe2Nav::Subscribe2Nav()
 : Node("nav_subscriber")
 {
   cmd_vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
-    "/cmd_vel",
+    "/cmd_vel_in_yaw",
     10,
     std::bind(&Subscribe2Nav::cmd_vel_callback, this, std::placeholders::_1));
 
