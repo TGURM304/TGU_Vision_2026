@@ -90,8 +90,16 @@ int main(int argc, char *argv[]) {
       {TargetPoint::SUPPLY_POINT, {1.2, 1.1}},
       {TargetPoint::POINT1,       {4.3, 6.3}},
       {TargetPoint::POINT2,       {5.3, 5.5}},
-      {TargetPoint::POINT3,       {5.3, 7.2}}
+      {TargetPoint::POINT3,       {5.3, 7.0}}
     };
+    
+    // std::map<TargetPoint, Point> point_map = {
+    //   {TargetPoint::START_POINT,  {1.8, 1.3}},
+    //   {TargetPoint::SUPPLY_POINT, {1.2, 1.1}},
+    //   {TargetPoint::POINT1,       {4.3, 6.3}},
+    //   {TargetPoint::POINT2,       {5.3, 5.5}},
+    //   {TargetPoint::POINT3,       {2.5, 2.5}}
+    // };
 
     TargetPoint last_point = TargetPoint::START_POINT;
  
@@ -101,12 +109,9 @@ int main(int argc, char *argv[]) {
       TargetPoint::POINT3
     };
 
-    io::NavStatus nav_status = io::NavStatus::IDLE;
-
     int index = 0;
 
     bool is_dead = false;
-    bool is_center = false;
 
     Point current_point{0, 0};
     
@@ -177,64 +182,33 @@ int main(int argc, char *argv[]) {
       vision2gimbal.nav_x = anav_x;
       vision2gimbal.nav_y = anav_y;
       vision2gimbal.nav_z = anav_z;
-
-      DEBUG("导航状态: {}", (int)nav_status);
-      DEBUG("导航向量: {}, {}", (float)vision2gimbal.nav_x, (float)vision2gimbal.nav_y);
-      
+      // DEBUG("123");
       // 比赛开始
       if(gimbal.state().is_start == 4){
         // 血量判断
         if(gimbal.state().hp > 100 && !is_dead){ // 血量充足
-          // 定时换位
-          // if (nav_status == io::NavStatus::SUCCEEDED &&
-          //   last_status != io::NavStatus::SUCCEEDED) {
-
-          //   auto elapsed = std::chrono::steady_clock::now() - t0;
-          //   if(elapsed > 5s){
-          //   t0 = std::chrono::steady_clock::now();
-
-          //   index = (index + 1) % center_path.size();
-          //   last_point = center_path[index];
-          //   current_point = point_map.at(last_point);
-          //   }
-            // DEBUG("cnm");
-
-          if(nav_status == io::NavStatus::SUCCEEDED){
-              is_center = true;
-          }
-          current_point = point_map.at(TargetPoint::POINT3);
-          std::vector<std::tuple<double, double, double>> current_path = {{current_point.x, current_point.y,0}};
-          if (nav_status == io::NavStatus::FAILED || nav_status == io::NavStatus::CANCELED || !is_center) {
+            std::vector<std::tuple<double, double, double>> current_path = {{3.5, 5.7, 0}};
             ros2.send_path(current_path);
-            DEBUG("发路径: {}, {}", current_point.x, current_point.y);
-          }
+
         }else if(gimbal.state().hp <= 100 || is_dead){ // 回家
           // 设置死亡标志位
           is_dead = true;
           // 在家直到回到满血
-          current_point = point_map.at(TargetPoint::START_POINT);
-          std::vector<std::tuple<double, double, double>> current_path = {{current_point.x, current_point.y,0}};
-
-          if (nav_status == io::NavStatus::FAILED || nav_status == io::NavStatus::CANCELED || is_center) {
-            ros2.send_path(current_path);
-            DEBUG("发路径: {}, {}", current_point.x, current_point.y);
-
-          }
-
-          if(nav_status == io::NavStatus::SUCCEEDED){
-              is_center = false;
-          }
+          std::vector<std::tuple<double, double, double>> current_path = {{-0.5, -0.5, 0}};
+          ros2.send_path(current_path);
 
           if(gimbal.state().hp >= 400){
             is_dead = false;
           }
+
+          // DEBUG("真的假的？");
 
         }else{ // 神秘状态
           DEBUG("进这个是傻逼");
         }
         vision2gimbal.nav_x = anav_x;
         vision2gimbal.nav_y = anav_y;
-        DEBUG("cnm");
+        
       }else{
         is_dead = false;
         current_point = point_map.at(TargetPoint::START_POINT);
@@ -244,9 +218,11 @@ int main(int argc, char *argv[]) {
         vision2gimbal.nav_z = 0;
       }
 
-      // DEBUG("血量：{} ; 比赛状态：{}",gimbal.state().hp, gimbal.state().is_start);
+      // DEBUG区
+      // DEBUG("{}", );
+      // DEBUG("血量：{} ; 死亡：{}",gimbal.state().hp, is_dead);
       gimbal.send(vision2gimbal);
-      DEBUG("{}", (float)vision2gimbal.nav_x);
+      // DEBUG("{}", (float)vision2gimbal.nav_x);
       std::this_thread::sleep_for(5ms);
     }
   });

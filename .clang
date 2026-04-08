@@ -1,0 +1,8 @@
+CompileFlags:
+  Add: [
+    "--gcc-toolchain=/usr/lib/gcc/x86_64-linux-gnu/11",
+
+    "-isystem", "/usr/lib/gcc/x86_64-linux-gnu/11/include",
+    "-isystem", "/usr/include/c++/11",
+    "-isystem", "/usr/include/x86_64-linux-gnu/c++/11"
+  ]

@@ -1,5 +1,5 @@
-enemy_color: "red"
-# enemy_color: "blue"
+# enemy_color: "red"
+enemy_color: "blue"
 
 #####-----神经网络参数-----#####
 yolo_name: yolov5
@@ -38,7 +38,7 @@ outpost_max_temp_lost_count: 75
 
 #####-----aimer参数-----#####
 yaw_offset: 0 # degree -2.5
-pitch_offset: 0 # degree 2
+pitch_offset: 0.2 # degree 2
 comming_angle: 60 # degree
 leaving_angle: 30 # degree
 decision_speed: 7 # rad/s
@@ -70,7 +70,7 @@ distort_coeffs: [-0.062465172400315981, 0.10305943039166041, 0.00388218492034935
 # 标定板到世界坐标系原点的水平距离: 1.13 m
 # 标定板同竖直摆放时的偏角: yaw7.61 pitch13.92 roll-0.46 degree
 R_camera2gimbal: [0, 0, 1, -1, 0, 0, 0, -1, 0]
-t_camera2gimbal: [0, -0.02, 0.05]
+t_camera2gimbal: [0, -0.02, 0.08]
 
 #####-----gimbal参数-----#####
 com_port: "/dev/ttyACM0"
